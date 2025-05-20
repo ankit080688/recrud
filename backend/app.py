@@ -6,7 +6,7 @@ import io, contextlib
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.config['SECRET_KEY'] = 'supersecretkey'  # Secret key for sessions (if needed)
 app.config['JWT_SECRET_KEY'] = 'supersecretjwtkey'  # Secret key for JWT
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
