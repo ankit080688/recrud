@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { BASE_URL } from '../api';
 
 function ReportsPage() {
   const { id } = useParams();
@@ -7,7 +8,7 @@ function ReportsPage() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch(`/reports/${id}`, {
+    fetch(`${BASE_URL}/reports/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then((res) => res.json())

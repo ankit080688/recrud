@@ -9,3 +9,7 @@ Minimal React frontend with candidate and recruiter dashboards.
    ```bash
    npm start
    ```
+
+The application assumes the backend API is available at
+`http://localhost:5000`. If you run the backend on a different URL,
+edit `src/api.js` to point to the correct location.
