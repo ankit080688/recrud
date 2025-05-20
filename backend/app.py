@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt
 from datetime import datetime
 import io, contextlib
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'supersecretkey'  # Secret key for sessions (if needed)
 app.config['JWT_SECRET_KEY'] = 'supersecretjwtkey'  # Secret key for JWT
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
