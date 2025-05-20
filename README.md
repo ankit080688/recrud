@@ -24,8 +24,11 @@ assessment platform with separate Candidate and Recruiter interfaces.
    npm start
    ```
 
-The frontend expects the backend API to be running at `http://localhost:5000`. If your backend is hosted elsewhere, set the `REACT_APP_API_BASE` environment variable or edit `frontend/src/api.js` to update the `API_BASE` constant.
-=======
+
+The frontend expects the backend API to be running at `http://localhost:5000`.
+If your backend is hosted elsewhere, set the `REACT_APP_API_BASE` environment
+variable or edit `frontend/src/api.js` and update the `API_BASE` constant to the
+appropriate base URL.
 
 
 These applications are simplified to demonstrate the flow of creating
