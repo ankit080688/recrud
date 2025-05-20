@@ -1,23 +1,30 @@
 {
-  "name": "recrud-frontend",
+  "name": "coding-assessment-platform",
   "version": "1.0.0",
   "private": true,
+  "description": "A coding assessment platform frontend built with React and Material-UI.",
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.0",
+    "chart.js": "^4.2.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0"
-  },
-  "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "react-router-dom": "^6.9.0",
+    "web-vitals": "^3.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/preset-env": "^7.27.2",
-    "@babel/preset-react": "^7.27.1",
-    "babel-loader": "^10.0.0",
-    "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.1"
-  }
+    "@babel/plugin-proposal-class-properties": "^7.18.6"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "ISC"
 }
