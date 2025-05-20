@@ -14,6 +14,9 @@ submissions, proctoring logs and reporting endpoints.
    python -m backend.app
    ```
 
+By default the API only listens on `127.0.0.1`. Set the `HOST` environment
+variable to expose it on your network, e.g. `HOST=0.0.0.0 python -m backend.app`.
+
 The application uses SQLite (`app.db`) for storage and JWT for
 authentication.
 
@@ -25,4 +28,4 @@ password `priyal`) directly into the database:
 ```bash
 python create_user.py
 ```
-=======
+
