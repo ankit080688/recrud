@@ -25,3 +25,4 @@ password `priyal`) directly into the database:
 ```bash
 python create_user.py
 ```
+=======
