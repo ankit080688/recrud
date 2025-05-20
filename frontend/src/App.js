@@ -1,38 +1,148 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import CandidateDashboard from './components/CandidateDashboard';
-import RecruiterDashboard from './components/RecruiterDashboard';
-import AssessmentPage from './components/AssessmentPage';
-import ReportsPage from './components/ReportsPage';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import PrivateRoute from './components/PrivateRoute';
+
+// Import pages for candidates
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
+import CodeTest from './pages/CodeTest';
+import Insights from './pages/Insights';
+
+// Import pages for recruiters
+import RecruiterDashboard from './pages/RecruiterDashboard';
+import CandidatesList from './pages/CandidatesList';
+import RealTimeMonitor from './pages/RealTimeMonitor';
+import TestSetup from './pages/TestSetup';
+import CandidateReport from './pages/CandidateReport';
 
 function App() {
-  const role = localStorage.getItem('role');
-  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // On app load, check localStorage for token and role to maintain logged-in state
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('token');
+    if (token && role) {
+      setUserRole(role);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Clear token and role from storage and state on logout
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    setUserRole(null);
+    navigate('/login');
+  };
 
   return (
-    <Router>
+    <div>
+      {/* Top navigation bar */}
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Coding Assessment Platform
+          </Typography>
+          {/* Show links based on user role */}
+          {userRole === 'candidate' && (
+            <>
+              <Button color="inherit" component={Link} to="/candidate/profile">Profile</Button>
+              <Button color="inherit" component={Link} to="/candidate/test">Take Test</Button>
+              <Button color="inherit" component={Link} to="/candidate/insights">Insights</Button>
+            </>
+          )}
+          {userRole === 'recruiter' && (
+            <>
+              <Button color="inherit" component={Link} to="/recruiter/dashboard">Dashboard</Button>
+              <Button color="inherit" component={Link} to="/recruiter/candidates">Candidates</Button>
+              <Button color="inherit" component={Link} to="/recruiter/monitor">Real-Time Monitor</Button>
+              <Button color="inherit" component={Link} to="/recruiter/test-setup">Test Setup</Button>
+            </>
+          )}
+          {userRole && (
+            <Button color="inherit" onClick={handleLogout}>Logout</Button>
+          )}
+        </Toolbar>
+      </AppBar>
+
+      {/* Define application routes */}
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route
-          path="/candidate"
-          element={token && role === 'candidate' ? <CandidateDashboard /> : <Navigate to="/" />}
+        {/* Public routes */}
+        <Route path="/login" element={<Login onLogin={(role) => setUserRole(role)} />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Candidate protected routes */}
+        <Route path="/candidate/profile" 
+               element={
+                 <PrivateRoute allowedRoles={['candidate']}>
+                   <Profile />
+                 </PrivateRoute>
+               } 
         />
-        <Route
-          path="/recruiter/*"
-          element={token && role === 'recruiter' ? <RecruiterDashboard /> : <Navigate to="/" />}
+        <Route path="/candidate/test" 
+               element={
+                 <PrivateRoute allowedRoles={['candidate']}>
+                   <CodeTest />
+                 </PrivateRoute>
+               } 
         />
-        <Route
-          path="/assessment/:id"
-          element={token ? <AssessmentPage /> : <Navigate to="/" />}
+        <Route path="/candidate/insights" 
+               element={
+                 <PrivateRoute allowedRoles={['candidate']}>
+                   <Insights />
+                 </PrivateRoute>
+               } 
         />
-        <Route
-          path="/reports/:id"
-          element={token ? <ReportsPage /> : <Navigate to="/" />}
+
+        {/* Recruiter protected routes */}
+        <Route path="/recruiter/dashboard" 
+               element={
+                 <PrivateRoute allowedRoles={['recruiter']}>
+                   <RecruiterDashboard />
+                 </PrivateRoute>
+               } 
         />
+        <Route path="/recruiter/candidates" 
+               element={
+                 <PrivateRoute allowedRoles={['recruiter']}>
+                   <CandidatesList />
+                 </PrivateRoute>
+               } 
+        />
+        <Route path="/recruiter/monitor" 
+               element={
+                 <PrivateRoute allowedRoles={['recruiter']}>
+                   <RealTimeMonitor />
+                 </PrivateRoute>
+               } 
+        />
+        <Route path="/recruiter/test-setup" 
+               element={
+                 <PrivateRoute allowedRoles={['recruiter']}>
+                   <TestSetup />
+                 </PrivateRoute>
+               } 
+        />
+        <Route path="/recruiter/report/:candidateId" 
+               element={
+                 <PrivateRoute allowedRoles={['recruiter']}>
+                   <CandidateReport />
+                 </PrivateRoute>
+               } 
+        />
+
+        {/* Default route: redirect to login if not logged in */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 
 export default App;
+
