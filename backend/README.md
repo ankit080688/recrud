@@ -16,3 +16,13 @@ submissions, proctoring logs and reporting endpoints.
 
 The application uses SQLite (`app.db`) for storage and JWT for
 authentication.
+
+## Creating a user
+
+Run `create_user.py` to insert a sample candidate account (email `Ankit`,
+password `priyal`) directly into the database:
+
+```bash
+python create_user.py
+```
+=======
