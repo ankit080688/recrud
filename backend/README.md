@@ -13,6 +13,10 @@ submissions, proctoring logs and reporting endpoints.
    ```bash
    python -m backend.app
    ```
+   To expose the API on your network, set the `HOST` environment variable:
+   ```bash
+   HOST=0.0.0.0 python -m backend.app
+   ```
 
 The application uses SQLite (`app.db`) for storage and JWT for
 authentication.
@@ -25,4 +29,3 @@ password `priyal`) directly into the database:
 ```bash
 python create_user.py
 ```
-=======
