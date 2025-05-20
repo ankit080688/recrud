@@ -7,3 +7,4 @@ const envBase =
     : undefined;
 
 export const API_BASE = envBase || 'http://localhost:5000';
+
