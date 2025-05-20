@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -35,6 +36,6 @@ if __name__ == '__main__':
     app = create_app()
     with app.app_context():
         db.create_all()
-
     host = os.environ.get('HOST', '127.0.0.1')
-    app.run(host=host, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host=host, port=port)

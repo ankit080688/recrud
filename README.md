@@ -16,6 +16,8 @@ assessment platform with separate Candidate and Recruiter interfaces.
    cd backend
    pip install -r requirements.txt
    python -m backend.app
+   # To expose on your local network use:
+   # HOST=0.0.0.0 python -m backend.app
    ```
 2. Install Node dependencies and start the frontend:
    ```bash
@@ -23,9 +25,6 @@ assessment platform with separate Candidate and Recruiter interfaces.
    npm install
    npm start
    ```
-
-
-The frontend expects the backend API to be running at `http://localhost:5000`. If your backend is hosted elsewhere, edit `frontend/src/api.js` and update the `API_BASE` constant or set the `REACT_APP_API_BASE` environment variable to the appropriate base URL before building the frontend.
-
-These applications are simplified to demonstrate the flow of creating
-assessments, submitting code and viewing results.
+```bash
+REACT_APP_API_BASE="http://192.168.1.10:5000" npm start
+```
