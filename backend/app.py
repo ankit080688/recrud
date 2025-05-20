@@ -51,7 +51,7 @@ class ProctoringLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # Create tables and seed initial data if not already present
-@app.before_first_request
+@app.before_request
 def create_tables_and_seed():
     db.create_all()
     # Check if database is empty and seed data
