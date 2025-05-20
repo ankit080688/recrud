@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BASE_URL } from '../api';
+import { API_BASE } from '../api';
 
 function AssessmentPage() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ function AssessmentPage() {
   const token = localStorage.getItem('token');
 
   const submit = async () => {
-    const res = await fetch(`${BASE_URL}/submissions/${id}`, {
+    const res = await fetch(`${API_BASE}/submissions/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
