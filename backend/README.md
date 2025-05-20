@@ -13,6 +13,10 @@ submissions, proctoring logs and reporting endpoints.
    ```bash
    python -m backend.app
    ```
+   To expose the API on your network, set the `HOST` environment variable:
+   ```bash
+   HOST=0.0.0.0 python -m backend.app
+   ```
 
 By default the API only listens on `127.0.0.1`. Set the `HOST` environment
 variable to expose it on your network, e.g. `HOST=0.0.0.0 python -m backend.app`.
@@ -28,4 +32,3 @@ password `priyal`) directly into the database:
 ```bash
 python create_user.py
 ```
-

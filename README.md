@@ -25,12 +25,6 @@ assessment platform with separate Candidate and Recruiter interfaces.
    npm install
    npm start
    ```
-
-The frontend assumes the backend API is available at `http://localhost:5000`. To point it at a different server, run webpack with the `REACT_APP_API_BASE` environment variable set:
-
 ```bash
 REACT_APP_API_BASE="http://192.168.1.10:5000" npm start
 ```
-
-These applications are simplified to demonstrate the flow of creating
-assessments, submitting code and viewing results.
