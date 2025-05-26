@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candidate Dashboard — Recrud</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html { --tw-bg-opacity:1; background-color:rgba(249,250,251,var(--tw-bg-opacity)); }
+    html.dark { --tw-bg-opacity:1; background-color:rgba(17,24,39,var(--tw-bg-opacity)); }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <!-- Top Nav -->
+  <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Recrud</h1>
+    <div class="flex items-center space-x-4">
+      <button id="theme-toggle" class="p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <svg id="icon-light" class="h-6 w-6 text-yellow-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 3.22l.61 1.23 1.36.2-1 1 .24 1.36L10 6.98l-1.21.64.24-1.36-1-1 1.36-.2L10 3.22zM4.22...
+          "/>
+        </svg>
+        <svg id="icon-dark" class="h-6 w-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M17.293 13.293a8 8 0 11-10.586-10.586 8 8 0 0010.586 10.586z"/>
+        </svg>
+      </button>
+      <img src="https://via.placeholder.com/32" alt="User Avatar" class="w-8 h-8 rounded-full"/>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <!-- Welcome Banner (full width) -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-bold">Hello, Jane!</h2>
+        <p class="text-gray-600 dark:text-gray-400">Your engagement score:</p>
+      </div>
+      <div class="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">78</div>
+    </div>
+
+    <!-- Metrics Cards (stays 4 across on large, 2 on md) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Innovation (IPI)</p>
+        <p class="mt-2 text-2xl font-semibold">81</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Adaptability (SAQ)</p>
+        <p class="mt-2 text-2xl font-semibold">74</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Culture Fit (CCF)</p>
+        <p class="mt-2 text-2xl font-semibold">69</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Network (NIV)</p>
+        <p class="mt-2 text-2xl font-semibold">83</p>
+      </div>
+    </div>
+
+    <!-- Analytics Cards in 2-column Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Profile Views -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-medium">Profile Views Over Time</h3>
+          <div class="space-x-2">
+            <button data-target="views" data-mode="chart" class="toggle-btn px-3 py-1 bg-indigo-600 text-white rounded text-sm">Chart</button>
+            <button data-target="views" data-mode="data" class="toggle-btn px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm">Data</button>
+          </div>
+        </div>
+        <canvas id="viewsChart" class="w-full h-48"></canvas>
+        <table id="viewsData" class="w-full table-auto text-left border-collapse hidden">
+          <thead>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th class="px-4 py-2">Day</th>
+              <th class="px-4 py-2">Views</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="px-4 py-2">Mon</td><td class="px-4 py-2">12</td></tr>
+            <tr><td class="px-4 py-2">Tue</td><td class="px-4 py-2">19</td></tr>
+            <tr><td class="px-4 py-2">Wed</td><td class="px-4 py-2">8</td></tr>
+            <tr><td class="px-4 py-2">Thu</td><td class="px-4 py-2">15</td></tr>
+            <tr><td class="px-4 py-2">Fri</td><td class="px-4 py-2">22</td></tr>
+            <tr><td class="px-4 py-2">Sat</td><td class="px-4 py-2">13</td></tr>
+            <tr><td class="px-4 py-2">Sun</td><td class="px-4 py-2">17</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Assessment Scores -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-medium">Assessment Scores</h3>
+          <div class="space-x-2">
+            <button data-target="scores" data-mode="chart" class="toggle-btn px-3 py-1 bg-indigo-600 text-white rounded text-sm">Chart</button>
+            <button data-target="scores" data-mode="data" class="toggle-btn px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm">Data</button>
+          </div>
+        </div>
+        <canvas id="scoresChart" class="w-full h-32"></canvas>
+        <table id="scoresData" class="w-full table-auto text-left border-collapse hidden">
+          <thead>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th class="px-4 py-2">Test</th>
+              <th class="px-4 py-2">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="px-4 py-2">A1</td><td class="px-4 py-2">75%</td></tr>
+            <tr><td class="px-4 py-2">A2</td><td class="px-4 py-2">85%</td></tr>
+            <tr><td class="px-4 py-2">A3</td><td class="px-4 py-2">90%</td></tr>
+            <tr><td class="px-4 py-2">A4</td><td class="px-4 py-2">80%</td></tr>
+            <tr><td class="px-4 py-2">A5</td><td class="px-4 py-2">88%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CES Breakdown -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-medium">Engagement Breakdown (CES)</h3>
+          <div class="space-x-2">
+            <button data-target="ces" data-mode="chart" class="toggle-btn px-3 py-1 bg-indigo-600 text-white rounded text-sm">Chart</button>
+            <button data-target="ces" data-mode="data" class="toggle-btn px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm">Data</button>
+          </div>
+        </div>
+        <canvas id="cesChart" class="w-full h-32"></canvas>
+        <table id="cesData" class="w-full table-auto text-left border-collapse hidden">
+          <thead>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th class="px-4 py-2">Component</th>
+              <th class="px-4 py-2">%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="px-4 py-2">Profile Completion</td><td class="px-4 py-2">40%</td></tr>
+            <tr><td class="px-4 py-2">Applications</td><td class="px-4 py-2">35%</td></tr>
+            <tr><td class="px-4 py-2">Messages</td><td class="px-4 py-2">25%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Skill Proficiency -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-medium">Skill Proficiency</h3>
+          <div class="space-x-2">
+            <button data-target="skill" data-mode="chart" class="toggle-btn px-3 py-1 bg-indigo-600 text-white rounded text-sm">Chart</button>
+            <button data-target="skill" data-mode="data" class="toggle-btn px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded text-sm">Data</button>
+          </div>
+        </div>
+        <canvas id="skillChart" class="w-full h-48"></canvas>
+        <table id="skillData" class="w-full table-auto text-left border-collapse hidden">
+          <thead>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th class="px-4 py-2">Skill</th>
+              <th class="px-4 py-2">Attempts</th>
+              <th class="px-4 py-2">Passes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="px-4 py-2">Frontend</td><td class="px-4 py-2">8</td><td class="px-4 py-2">6</td></tr>
+            <tr><td class="px-4 py-2">Backend</td><td class="px-4 py-2">6</td><td class="px-4 py-2">5</td></tr>
+            <tr><td class="px-4 py-2">DB</td><td class="px-4 py-2">5</td><td class="px-4 py-2">3</td></tr>
+            <tr><td class="px-4 py-2">Algorithms</td><td class="px-4 py-2">7</td><td class="px-4 py-2">5</td></tr>
+            <tr><td class="px-4 py-2">DevOps</td><td class="px-4 py-2">4</td><td class="px-4 py-2">2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Application Tracking (spans both columns) -->
+      <div class="md:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 class="text-lg font-medium mb-4">Application Progress</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+          <div><p class="text-2xl font-semibold">5</p><p class="text-gray-500 dark:text-gray-400">Applied</p></div>
+          <div><p class="text-2xl font-semibold">3</p><p class="text-gray-500 dark:text-gray-400">Screening</p></div>
+          <div><p class="text-2xl font-semibold">2</p><p class="text-gray-500 dark:text-gray-400">Interviewing</p></div>
+          <div><p class="text-2xl font-semibold">1</p><p class="text-gray-500 dark:text-gray-400">Offers</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Theme toggle logic (unchanged)...
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    const iconLight = document.getElementById('icon-light');
+    const iconDark = document.getElementById('icon-dark');
+    function updateIcon() {
+      if (html.classList.contains('dark')) {
+        iconLight.classList.remove('hidden');
+        iconDark.classList.add('hidden');
+      } else {
+        iconLight.classList.add('hidden');
+        iconDark.classList.remove('hidden');
+      }
+    }
+    toggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      updateIcon();
+    });
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+      updateIcon();
+    })();
+
+    // Chart.js setup and Chart/Data toggles
+    document.addEventListener('DOMContentLoaded', () => {
+      // initialize charts (as before)...
+      const viewsChart = new Chart(document.getElementById('viewsChart'), {
+        type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets:[{ label:'Views', data:[12,19,8,15,22,13,17],
+            borderColor:'#6366F1', backgroundColor:'rgba(99,102,241,0.1)', fill:true, tension:0.3 }]
+        }, options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+      });
+      const scoresChart = new Chart(document.getElementById('scoresChart'), {
+        type:'bar', data:{ labels:['A1','A2','A3','A4','A5'],
+          datasets:[{ data:[75,85,90,80,88], backgroundColor:'#10B981' }]
+        }, options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ display:false }, y:{ display:false, beginAtZero:true } } }
+      });
+      const cesChart = new Chart(document.getElementById('cesChart'), {
+        type:'doughnut', data:{ labels:['Profile','Apps','Messages'],
+          datasets:[{ data:[40,35,25], backgroundColor:['#6366F1','#EC4899','#FBBF24'] }]
+        }, options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } }
+      });
+      const skillChart = new Chart(document.getElementById('skillChart'), {
+        type:'radar', data:{ labels:['Frontend','Backend','DB','Algorithms','DevOps'],
+          datasets:[
+            { label:'Attempts', data:[8,6,5,7,4], borderColor:'#3B82F6', backgroundColor:'rgba(59,130,246,0.2)' },
+            { label:'Passes',   data:[6,5,3,5,2], borderColor:'#F97316', backgroundColor:'rgba(249,115,22,0.2)' }
+          ]
+        }, options:{ responsive:true, scales:{ r:{ beginAtZero:true, max:10 } } }
+      });
+
+      // toggle logic
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.target, m = btn.dataset.mode;
+          document.querySelectorAll(`.toggle-btn[data-target="${t}"]`).forEach(b => {
+            b.classList.toggle('bg-indigo-600', b===btn);
+            b.classList.toggle('text-white',   b===btn);
+            b.classList.toggle('bg-gray-200',   b!==btn);
+          });
+          document.getElementById(`${t}Chart`).classList.toggle('hidden', m==='data');
+          document.getElementById(`${t}Data`). classList.toggle('hidden', m==='chart');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
