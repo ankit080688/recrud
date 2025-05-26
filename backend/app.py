@@ -52,6 +52,19 @@ class ProctoringLog(db.Model):
     event_type = db.Column(db.String(50))  # e.g., 'TAB_SWITCH', 'COPY_PASTE', 'WEBCAM_DISABLED'
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+# --- ATS models ---
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    created_by = db.Column(db.Integer)  # recruiter user id
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    candidate_id = db.Column(db.Integer)
+    status = db.Column(db.String(20), default='applied')
+
 # Create tables and seed initial data if not already present
 @app.before_request
 def create_tables_and_seed():
@@ -76,8 +89,12 @@ def create_tables_and_seed():
         q3 = Question(text='Output Good Morning', sample_input='', expected_output='Good Morning', assessment=assess2)
         q4 = Question(text='Calculate 2*3', sample_input='', expected_output='6', assessment=assess2)
         db.session.add_all([assess1, q1, q2, assess2, q3, q4])
+        # Create sample jobs
+        job1 = Job(title='Frontend Developer', description='Build React apps', created_by=recruiter.id)
+        job2 = Job(title='Backend Developer', description='Work on APIs', created_by=recruiter.id)
+        db.session.add_all([assess1, q1, q2, assess2, q3, q4, job1, job2])
         db.session.commit()
-        print("Seeded initial users, assessments, and questions.")
+        print("Seeded initial users, assessments, questions, and jobs.")
 
 # Utility: role-based access decorator for recruiters
 from functools import wraps
@@ -361,6 +378,69 @@ def get_logs():
             "timestamp": log.timestamp.isoformat()  # return timestamp as string
         })
     return jsonify(result), 200
+
+# --- Job and application endpoints ---
+@app.route('/jobs', methods=['GET', 'POST'])
+@jwt_required()
+def jobs():
+    role = get_jwt().get('role')
+    if request.method == 'GET':
+        jobs = Job.query.all()
+        return jsonify([{
+            'id': j.id,
+            'title': j.title,
+            'description': j.description,
+            'created_by': j.created_by
+        } for j in jobs])
+    else:  # POST
+        if role != 'recruiter':
+            return jsonify({'msg': 'Only recruiters can post jobs'}), 403
+        data = request.get_json()
+        title = data.get('title')
+        if not title:
+            return jsonify({'msg': 'Job title required'}), 400
+        description = data.get('description', '')
+        job = Job(title=title, description=description, created_by=get_jwt_identity())
+        db.session.add(job)
+        db.session.commit()
+        return jsonify({'msg': 'Job created', 'id': job.id}), 201
+
+@app.route('/applications', methods=['POST', 'GET'])
+@jwt_required()
+def applications():
+    role = get_jwt().get('role')
+    if request.method == 'POST':
+        if role != 'candidate':
+            return jsonify({'msg': 'Only candidates can apply'}), 403
+        data = request.get_json()
+        job_id = data.get('job_id')
+        if not job_id:
+            return jsonify({'msg': 'job_id required'}), 400
+        existing = Application.query.filter_by(job_id=job_id, candidate_id=get_jwt_identity()).first()
+        if existing:
+            return jsonify({'msg': 'Already applied'}), 400
+        apprec = Application(job_id=job_id, candidate_id=get_jwt_identity())
+        db.session.add(apprec)
+        db.session.commit()
+        return jsonify({'msg': 'Application submitted'}), 201
+    else:  # GET
+        query = Application.query
+        job_id = request.args.get('job_id')
+        candidate_id = request.args.get('candidate_id')
+        if job_id:
+            query = query.filter_by(job_id=int(job_id))
+        if candidate_id:
+            query = query.filter_by(candidate_id=int(candidate_id))
+        # Recruiters can see all, candidates only their own
+        if role == 'candidate' and not candidate_id:
+            query = query.filter_by(candidate_id=get_jwt_identity())
+        apps = query.all()
+        return jsonify([{
+            'id': a.id,
+            'job_id': a.job_id,
+            'candidate_id': a.candidate_id,
+            'status': a.status
+        } for a in apps])
 
 # Report endpoint
 @app.route('/report/<int:candidate_id>', methods=['GET'])
