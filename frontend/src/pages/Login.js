@@ -23,9 +23,10 @@ const Login = ({ onLogin }) => {
         throw new Error(data.msg || 'Login failed');
       }
       const data = await response.json();
-      // On success, store token and role, update App state and navigate
+      // On success, store token, role and id, update App state and navigate
       localStorage.setItem('token', data.access_token);
       localStorage.setItem('role', data.user.role);
+      localStorage.setItem('userId', data.user.id);
       onLogin(data.user.role);  // inform App of the logged-in user's role
       if (data.user.role === 'candidate') {
         navigate('/candidate/profile');
