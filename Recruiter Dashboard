@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recrud Recruiter Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* --------- Global Styles --------- */
+    :root {
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --text-muted: #4b5563;
+      --accent: #6366f1;
+      --border: #e5e7eb;
+      --shadow: rgba(0, 0, 0, 0.04);
+    }
+    [data-theme="dark"] {
+      --bg: #111827;
+      --card-bg: #1f2937;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent: #8b5cf6;
+      --border: #374151;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    h1, h2 { font-weight: 600; }
+    h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .grid { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px var(--shadow);
+      padding: 1rem;
+      position: relative;
+    }
+    .kpi { display: flex; justify-content: space-between; gap: 1rem; }
+    .kpi .card { flex: 1; text-align: center; }
+    .number { font-size: 2rem; font-weight: 700; color: var(--accent); }
+    .chart-placeholder, .data-placeholder {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th { background: var(--bg); color: var(--text-muted); font-weight: 500; }
+    .toggle-btn {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .theme-switch {
+      position: fixed;
+      top: 1rem; left: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px var(--shadow);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <button class="theme-switch" onclick="toggleTheme()">🌜 Toggle Theme</button>
+  <div class="container">
+    <h1>Recruiter Dashboard</h1>
+
+    <!-- KPI Cards -->
+    <div class="kpi">
+      <div class="card"><div class="number">5</div><div>Open Positions</div></div>
+      <div class="card"><div class="number">42</div><div>Active Candidates</div></div>
+      <div class="card"><div class="number">78%</div><div>Avg CES</div></div>
+      <div class="card"><div class="number">28d</div><div>Avg Time-to-Hire</div></div>
+    </div>
+
+    <!-- Analytics Grid -->
+    <div class="grid grid-2" style="margin-top:1rem;">
+      <!-- Hiring Funnel Card -->
+      <div class="card" id="funnel-card">
+        <h2>Hiring Funnel</h2>
+        <button class="toggle-btn" onclick="toggleView('funnel')">View Data</button>
+        <div class="chart-placeholder" id="funnel-chart">[Funnel Chart Here]</div>
+        <div class="data-placeholder" id="funnel-data" style="display:none;">
+          <table>
+            <thead><tr><th>Stage</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr><td>Applicants</td><td>120</td></tr>
+              <tr><td>Screened</td><td>45</td></tr>
+              <tr><td>Interviewed</td><td>15</td></tr>
+              <tr><td>Hired</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Time-to-Hire Trend Card -->
+      <div class="card" id="time-card">
+        <h2>Time-to-Hire Trend</h2>
+        <button class="toggle-btn" onclick="toggleView('time')">View Data</button>
+        <div class="chart-placeholder" id="time-chart">[Line Chart Here]</div>
+        <div class="data-placeholder" id="time-data" style="display:none;">
+          <table>
+            <thead><tr><th>Month</th><th>Avg Days</th></tr></thead>
+            <tbody>
+              <tr><td>Jan</td><td>30</td></tr>
+              <tr><td>Feb</td><td>28</td></tr>
+              <tr><td>Mar</td><td>25</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Assessment Drop-off Card -->
+      <div class="card" id="assess-card">
+        <h2>Assessment Drop-off</h2>
+        <button class="toggle-btn" onclick="toggleView('assess')">View Data</button>
+        <div class="chart-placeholder" id="assess-chart">[Bar Chart Here]</div>
+        <div class="data-placeholder" id="assess-data" style="display:none;">
+          <table>
+            <thead><tr><th>Stage</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr><td>Invited</td><td>50</td></tr>
+              <tr><td>Completed</td><td>30</td></tr>
+              <tr><td>Passed</td><td>20</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Candidate Quality Card -->
+      <div class="card" id="quality-card">
+        <h2>Avg Candidate Quality</h2>
+        <button class="toggle-btn" onclick="toggleView('quality')">View Data</button>
+        <div class="chart-placeholder" id="quality-chart">[Quality Overview Chart]</div>
+        <div class="data-placeholder" id="quality-data" style="display:none;">
+          <table>
+            <thead><tr><th>Role</th><th>Avg CES</th><th>Avg IPI</th><th>Avg SAQ</th></tr></thead>
+            <tbody>
+              <tr><td>Engineer</td><td>76</td><td>81</td><td>79</td></tr>
+              <tr><td>Designer</td><td>72</td><td>75</td><td>80</td></tr>
+              <tr><td>PM</td><td>84</td><td>88</td><td>82</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sourcing Breakdown Card -->
+      <div class="card" id="source-card">
+        <h2>Sourcing Breakdown</h2>
+        <button class="toggle-btn" onclick="toggleView('source')">View Data</button>
+        <div class="chart-placeholder" id="source-chart">[Donut Chart Here]</div>
+        <div class="data-placeholder" id="source-data" style="display:none;">
+          <table>
+            <thead><tr><th>Source</th><th>Count</th></tr></thead>
+            <tbody>
+              <tr><td>Manual</td><td>60</td></tr>
+              <tr><td>Recommended</td><td>30</td></tr>
+              <tr><td>Referrals</td><td>10</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const body = document.body;
+      body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
+    }
+
+    function toggleView(section) {
+      const chart = document.getElementById(`${section}-chart`);
+      const data  = document.getElementById(`${section}-data`);
+      const btn   = chart.parentElement.querySelector('.toggle-btn');
+
+      if (chart.style.display !== 'none') {
+        chart.style.display = 'none';
+        data.style.display  = 'block';
+        btn.textContent     = 'View Chart';
+      } else {
+        chart.style.display = 'flex';
+        data.style.display  = 'none';
+        btn.textContent     = 'View Data';
+      }
+    }
+  </script>
+</body>
+</html>
