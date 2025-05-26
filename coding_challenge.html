@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coding Challenge — Recrud</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Ace Editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-/+f9gbkZkTpxkvU6Y6+l1oLkOlJtH6EgiFZKi9fnWvlkSS0tZHbQ7GncUHdTBPeVnyRb+Izs14M9UXrIdE2rNQ==" crossorigin="anonymous"></script>
+  <style>
+    html { background: #F9FAFB }
+    html.dark { background: #111827 }
+    #editor { height: 300px; }
+  </style>
+</head>
+<body class="min-h-screen text-gray-800 dark:text-gray-200">
+  <!-- Header -->
+  <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
+    <button onclick="history.back()" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600">← Back</button>
+    <h1 class="text-2xl font-semibold">Coding Challenge</h1>
+    <div class="flex items-center space-x-4">
+      <!-- Highlighted Timer -->
+      <div id="timer" class="font-mono text-2xl font-bold bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-4 py-2 rounded-full shadow">
+        45:00
+      </div>
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" class="p-2 rounded focus:ring-2 focus:ring-indigo-500">
+        <svg id="icon-light" class="h-6 w-6 text-yellow-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 3l1 2 2 .3-1.5 1 .3 2L10 8l-1.8.6.3-2L7 5.3l2-.3 1-2z"/>
+        </svg>
+        <svg id="icon-dark" class="h-6 w-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M17.3 13.3a8 8 0 11-10.6-10.6 8 8 0 0010.6 10.6z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <!-- Problem Statement -->
+    <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+      <h2 class="text-xl font-semibold">Two Sum</h2>
+      <p class="text-gray-700 dark:text-gray-300">
+        Given an array of integers <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">nums</code> and an integer <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">target</code>,
+        return indices of the two numbers such that they add up to <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">target</code>.
+      </p>
+      <p class="text-gray-600 dark:text-gray-400 text-sm">Example:</p>
+      <pre class="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm"><code>Input: nums = [2,7,11,15], target = 9
+Output: [0,1]</code></pre>
+    </section>
+
+    <!-- Editor & Controls -->
+    <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <label for="language-select" class="text-sm font-medium text-gray-700 dark:text-gray-300">Language:</label>
+          <select id="language-select" class="ml-2 px-2 py-1 bg-gray-100 dark:bg-gray-700 border rounded">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+          </select>
+        </div>
+        <div class="space-x-2">
+          <button id="run-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Run Tests</button>
+          <button id="submit-btn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Submit</button>
+        </div>
+      </div>
+      <div id="editor" class="rounded border border-gray-300 dark:border-gray-600"></div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Console Output:</h3>
+        <pre id="console" class="bg-gray-100 dark:bg-gray-700 p-4 rounded h-40 overflow-auto text-sm"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Theme toggle
+    const htmlEl = document.documentElement,
+          tgl = document.getElementById('theme-toggle'),
+          iL = document.getElementById('icon-light'),
+          iD = document.getElementById('icon-dark');
+    tgl.onclick = () => {
+      htmlEl.classList.toggle('dark');
+      localStorage.setItem('theme', htmlEl.classList.contains('dark')?'dark':'light');
+      iL.classList.toggle('hidden', !htmlEl.classList.contains('dark'));
+      iD.classList.toggle('hidden', htmlEl.classList.contains('dark'));
+    };
+    (()=>{
+      const t = localStorage.getItem('theme');
+      if(t==='dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        htmlEl.classList.add('dark');
+      }
+      iL.classList.toggle('hidden', !htmlEl.classList.contains('dark'));
+      iD.classList.toggle('hidden', htmlEl.classList.contains('dark'));
+    })();
+
+    // Timer (45 minutes)
+    let totalSeconds = 45 * 60;
+    const timerEl = document.getElementById('timer');
+    setInterval(() => {
+      const m = Math.floor(totalSeconds / 60).toString().padStart(2,'0'),
+            s = (totalSeconds % 60).toString().padStart(2,'0');
+      timerEl.textContent = `${m}:${s}`;
+      if(totalSeconds>0) totalSeconds--;
+    }, 1000);
+
+    // Ace Editor setup
+    const editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/python");
+    editor.setTheme("ace/theme/monokai");
+    editor.setValue(`# Write your solution here\n`);
+
+    // Language selector
+    document.getElementById('language-select').onchange = e => {
+      const lang = e.target.value;
+      const mode = ({ python:'python', javascript:'javascript', java:'java' })[lang];
+      editor.session.setMode(`ace/mode/${mode}`);
+    };
+
+    // Mock test runner
+    document.getElementById('run-btn').onclick = () => {
+      const consoleEl = document.getElementById('console');
+      consoleEl.textContent = 'Running tests...\n';
+      setTimeout(() => {
+        consoleEl.textContent += '✓ Test 1 passed\n';
+        consoleEl.textContent += '✓ Test 2 passed\n';
+        consoleEl.textContent += '✗ Test 3 failed\n';
+      }, 500);
+    };
+
+    // Mock submit
+    document.getElementById('submit-btn').onclick = () => {
+      const consoleEl = document.getElementById('console');
+      consoleEl.textContent += '\nSubmitting solution...\n';
+      setTimeout(() => {
+        consoleEl.textContent += '✅ All tests passed! Your solution has been submitted.\n';
+      }, 500);
+    };
+  </script>
+</body>
+</html>
