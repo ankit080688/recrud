@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile Builder — Recrud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { background: #F9FAFB } 
+    html.dark { background: #111827 }
+  </style>
+</head>
+<body class="min-h-screen text-gray-800 dark:text-gray-200">
+  <!-- Top Nav -->
+  <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">Recrud</h1>
+    <div class="flex items-center space-x-4">
+      <button id="theme-toggle" class="p-2 rounded focus:ring-2 focus:ring-indigo-500">
+        <svg id="icon-light" class="h-6 w-6 text-yellow-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 3l1 2 2 .3-1.5 1 .3 2L10 8l-1.8.6.3-2L7 5.3l2-.3 1-2z"/>
+        </svg>
+        <svg id="icon-dark" class="h-6 w-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M17.3 13.3a8 8 0 11-10.6-10.6 8 8 0 0010.6 10.6z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Action Modal -->
+  <div id="action-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-6 space-y-4">
+      <h2 id="modal-title" class="text-xl font-semibold text-gray-900 dark:text-gray-100"></h2>
+      <p id="modal-disclaimer" class="text-gray-600 dark:text-gray-300"></p>
+      <form id="modal-form" class="space-y-2">
+        <!-- options injected dynamically -->
+        <div class="flex justify-end space-x-2 pt-4">
+          <button type="button" id="modal-cancel" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300">Cancel</button>
+          <button type="submit" id="modal-confirm" class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50" disabled>Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded opacity-0 transition-opacity"></div>
+
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Wizard -->
+      <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
+        <!-- Stepper -->
+        <div class="flex justify-between mb-8">
+          <div class="flex-1 text-center">
+            <div id="step-1-ind" class="step-indicator inline-block w-8 h-8 rounded-full bg-indigo-600 text-white">1</div>
+            <div class="text-sm font-medium">Basic Info</div>
+          </div>
+          <div class="flex-1 text-center">
+            <div id="step-2-ind" class="step-indicator inline-block w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-600">2</div>
+            <div class="text-sm font-medium">Skills</div>
+          </div>
+          <div class="flex-1 text-center">
+            <div id="step-3-ind" class="step-indicator inline-block w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-600">3</div>
+            <div class="text-sm font-medium">Projects</div>
+          </div>
+          <div class="flex-1 text-center">
+            <div id="step-4-ind" class="step-indicator inline-block w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-600">4</div>
+            <div class="text-sm font-medium">Endorsements</div>
+          </div>
+          <div class="flex-1 text-center">
+            <div id="step-5-ind" class="step-indicator inline-block w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-600">5</div>
+            <div class="text-sm font-medium">Review</div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form id="wizard-form" class="space-y-6">
+          <!-- Step 1 -->
+          <div data-step="1">
+            <label class="block text-sm font-medium">Full Name</label>
+            <input name="fullName" type="text" required class="mt-1 w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+            <label class="block text-sm font-medium mt-4">Headline</label>
+            <input name="headline" type="text" class="mt-1 w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+            <label class="block text-sm font-medium mt-4">Location</label>
+            <input name="location" type="text" class="mt-1 w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+          </div>
+
+          <!-- Step 2: Skills -->
+          <div data-step="2" class="hidden">
+            <div class="flex items-center space-x-2">
+              <input id="skill-input" type="text" placeholder="Type skill…" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+              <button type="button" id="add-skill-btn" class="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white rounded"><span class="text-xl">+</span></button>
+            </div>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Skill will only reflect after clearing the assessment.</p>
+            <div id="skill-tags" class="flex flex-wrap gap-2 mt-4"></div>
+          </div>
+
+          <!-- Step 3 -->
+          <div data-step="3" class="hidden">
+            <label class="block text-sm font-medium">Portfolio Links</label>
+            <input name="portfolio" type="url" placeholder="Project URL" class="mt-1 w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+            <label class="block text-sm font-medium mt-4">Upload Files</label>
+            <input type="file" multiple class="mt-1 w-full text-gray-700 dark:text-gray-300"/>
+          </div>
+
+          <!-- Step 4: Endorsements -->
+          <div data-step="4" class="hidden">
+            <div class="flex items-center space-x-2">
+              <input id="peer-input" type="email" placeholder="Peer Email" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 border rounded"/>
+              <button type="button" id="add-peer-btn" class="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white rounded"><span class="text-xl">+</span></button>
+            </div>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Profiles with endorsements get more recruiter views.</p>
+            <ul id="peer-list" class="list-disc ml-5 mt-4 text-gray-700 dark:text-gray-300"></ul>
+          </div>
+
+          <!-- Step 5: Review -->
+          <div data-step="5" class="hidden">
+            <h3 class="font-semibold">Review Your Profile</h3>
+            <p><strong>Name:</strong> <span id="preview-fullName">—</span></p>
+            <p><strong>Headline:</strong> <span id="preview-headline">—</span></p>
+            <p><strong>Location:</strong> <span id="preview-location">—</span></p>
+            <p><strong>Skills:</strong> <span id="preview-skills">—</span></p>
+            <p><strong>Portfolio:</strong> <span id="preview-portfolio">—</span></p>
+            <p><strong>Endorsements:</strong> <span id="preview-endorsements">—</span></p>
+          </div>
+
+          <!-- Navigation -->
+          <div class="flex justify-between">
+            <button type="button" id="prev-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hidden">Back</button>
+            <button type="button" id="next-btn" class="px-4 py-2 bg-indigo-600 text-white rounded">Next</button>
+            <button type="submit" id="submit-btn" class="px-4 py-2 bg-green-600 text-white rounded hidden">Save</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Preview -->
+      <aside class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4 lg:sticky lg:top-6">
+        <h3 class="font-semibold">Profile Preview</h3>
+        <p><strong>Name:</strong> <span id="preview-fullName-aside">—</span></p>
+        <p><strong>Headline:</strong> <span id="preview-headline-aside">—</span></p>
+        <p><strong>Location:</strong> <span id="preview-location-aside">—</span></p>
+        <p><strong>Skills:</strong> <span id="preview-skills-aside">—</span></p>
+        <p><strong>Portfolio:</strong> <span id="preview-portfolio-aside">—</span></p>
+        <p><strong>Endorsements:</strong> <span id="preview-endorsements-aside">—</span></p>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle'),
+          htmlEl = document.documentElement,
+          iconL = document.getElementById('icon-light'),
+          iconD = document.getElementById('icon-dark');
+    toggle.onclick = ()=>{
+      htmlEl.classList.toggle('dark');
+      localStorage.setItem('theme', htmlEl.classList.contains('dark')?'dark':'light');
+      iconL.classList.toggle('hidden', !htmlEl.classList.contains('dark'));
+      iconD.classList.toggle('hidden', htmlEl.classList.contains('dark'));
+    };
+    (()=>{
+      const t = localStorage.getItem('theme');
+      if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)) htmlEl.classList.add('dark');
+      iconL.classList.toggle('hidden', !htmlEl.classList.contains('dark'));
+      iconD.classList.toggle('hidden', htmlEl.classList.contains('dark'));
+    })();
+
+    // Wizard navigation
+    let step=1, total=5;
+    const form = document.getElementById('wizard-form'),
+          prevBtn = document.getElementById('prev-btn'),
+          nextBtn = document.getElementById('next-btn'),
+          submitBtn = document.getElementById('submit-btn');
+    function showStep(s){
+      step=s;
+      document.querySelectorAll('[data-step]').forEach(el=>el.classList.toggle('hidden',+el.dataset.step!==s));
+      document.querySelectorAll('.step-indicator').forEach((el,i)=>{
+        el.classList.toggle('bg-indigo-600',i+1===s);
+        el.classList.toggle('text-white', i+1===s);
+        el.classList.toggle('bg-gray-300', i+1!==s);
+      });
+      prevBtn.classList.toggle('hidden',s===1);
+      nextBtn.classList.toggle('hidden',s===total);
+      submitBtn.classList.toggle('hidden',s!==total);
+      updatePreview();
+    }
+    prevBtn.onclick=()=>step>1&&showStep(step-1);
+    nextBtn.onclick=()=>step<total&&showStep(step+1);
+    form.onsubmit=e=>{ e.preventDefault(); window.location.href='success.html'; };
+
+    // Modal
+    const modal = document.getElementById('action-modal'),
+          mTitle = document.getElementById('modal-title'),
+          mDisc  = document.getElementById('modal-disclaimer'),
+          mForm  = document.getElementById('modal-form'),
+          mConfirm= document.getElementById('modal-confirm'),
+          mCancel = document.getElementById('modal-cancel'),
+          toast   = document.getElementById('toast'),
+          skillInput = document.getElementById('skill-input'),
+          addSkillBtn= document.getElementById('add-skill-btn'),
+          peerInput   = document.getElementById('peer-input'),
+          addPeerBtn  = document.getElementById('add-peer-btn'),
+          skillTags   = document.getElementById('skill-tags'),
+          peerList    = document.getElementById('peer-list');
+    let context='', pending='';
+
+    function openModal(type,value){
+      context=type; pending=value;
+      // Build options
+      mForm.innerHTML='';
+      let html='';
+      if(type==='skill'){
+        mTitle.textContent=`Assess Skill: "${value}"`;
+        mDisc.textContent='Skill will only reflect after clearing the assessment.';
+        html=`
+          <label class="inline-flex items-center"><input type="radio" name="modalChoice" value="now"/><span class="ml-2">Take now</span></label>
+          <label class="inline-flex items-center"><input type="radio" name="modalChoice" value="later"/><span class="ml-2">Later (I acknowledge)</span></label>
+        `;
+      } else {
+        mTitle.textContent=`Invite Peer: "${value}"`;
+        mDisc.textContent='Profiles with endorsements get more recruiter views.';
+        html=`
+          <label class="inline-flex items-center"><input type="radio" name="modalChoice" value="now"/><span class="ml-2">Send now</span></label>
+          <label class="inline-flex items-center"><input type="radio" name="modalChoice" value="later"/><span class="ml-2">Later (I acknowledge)</span></label>
+          <label class="inline-flex items-center"><input type="radio" name="modalChoice" value="skip"/><span class="ml-2">Skip</span></label>
+        `;
+      }
+      mForm.insertAdjacentHTML('afterbegin', html);
+      mForm.appendChild(mCancel);
+      mForm.appendChild(mConfirm.parentNode);
+      mConfirm.disabled=true;
+      modal.classList.remove('hidden');
+
+      mForm.onchange = ()=> mConfirm.disabled = !mForm.modalChoice.value;
+      mCancel.onclick = e=>{ e.preventDefault(); modal.classList.add('hidden'); };
+      mForm.onsubmit = e=>{
+        e.preventDefault();
+        const c=mForm.modalChoice.value;
+        if(context==='skill'){
+          if(c==='now') return window.location.href=`skill-assessment.html?skill=${encodeURIComponent(pending)}`;
+          if(c==='later') toastMsg(`"${pending}" saved as draft`), addSkill(pending,false);
+        } else {
+          if(c==='now') addPeer(pending,'Invited'), toastMsg(`Invitation sent`);
+          if(c==='later') addPeer(pending,'Pending'), toastMsg(`"${pending}" saved as draft`);
+        }
+        modal.classList.add('hidden');
+      };
+    }
+
+    function toastMsg(m){
+      toast.textContent=m; toast.classList.add('opacity-100');
+      setTimeout(()=>toast.classList.remove('opacity-100'),2000);
+    }
+
+    // Data
+    const profile={skills:[],peers:[]};
+    function addSkill(n,a){ profile.skills.push({name:n,assessed:a}); renderSkills(); }
+    function renderSkills(){
+      skillTags.innerHTML='';
+      profile.skills.forEach((s,i)=>{
+        const d=document.createElement('div');
+        d.className=`flex items-center px-2 py-1 rounded ${s.assessed?'bg-green-200 text-green-800':'bg-yellow-100 text-yellow-800'}`;
+        d.innerHTML=`<span class="mr-2">${s.name}</span>${s.assessed?'<span class="text-xs">Cleared</span>':`<button data-i="${i}" class="assess-btn text-xs underline">Assess</button>`}`;
+        skillTags.appendChild(d);
+      });
+      document.querySelectorAll('.assess-btn').forEach(b=>b.onclick=()=>openModal('skill',profile.skills[b.dataset.i].name));
+      updatePreview();
+    }
+
+    function addPeer(e,s){ profile.peers.push({email:e,status:s}); const li=document.createElement('li');li.textContent=`${e} – ${s}`;peerList.append(li);updatePreview(); }
+
+    addSkillBtn.onclick=()=>{ const v=skillInput.value.trim(); if(v)openModal('skill',v); skillInput.value='';};
+    skillInput.onkeydown=e=>{ if(e.key==='Enter'){e.preventDefault(); addSkillBtn.click(); }};
+
+    addPeerBtn.onclick=()=>{ const v=peerInput.value.trim(); if(v)openModal('peer',v); peerInput.value='';};
+    peerInput.onkeydown=e=>{ if(e.key==='Enter'){e.preventDefault(); addPeerBtn.click(); }};
+
+    function updatePreview(){
+      ['fullName','headline','location','portfolio'].forEach(f=>{
+        const v=form[f]?.value||'—';
+        document.querySelectorAll(`#preview-${f}, #preview-${f}-aside`).forEach(x=>x.textContent=v);
+      });
+      const sk=profile.skills.filter(s=>s.assessed).map(s=>s.name);
+      document.getElementById('preview-skills').textContent=sk.join(', ')||'—';
+      document.getElementById('preview-skills-aside').innerHTML=sk.length?sk.map(n=>`<li>${n}</li>`).join(''):'<li>—</li>';
+      const pr=profile.peers.map(p=>p.email);
+      document.getElementById('preview-endorsements').textContent=pr.length||'—';
+      document.getElementById('preview-endorsements-aside').innerHTML=pr.length?pr.map(e=>`<li>${e}</li>`).join(''):'<li>—</li>';
+    }
+
+    showStep(1); renderSkills();
+  </script>
+</body>
+</html>
