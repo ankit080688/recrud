@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recrud Login</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Enable dark mode via .dark class on <html> */
+    html { 
+      --tw-bg-opacity: 1; 
+      background-color: rgba(249, 250, 251, var(--tw-bg-opacity)); 
+    }
+    html.dark {
+      --tw-bg-opacity: 1;
+      background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
+    <!-- Theme Toggle -->
+    <div class="flex justify-end">
+      <button id="theme-toggle" class="p-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <svg id="icon-light" class="h-6 w-6 text-yellow-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 3.22l.61 1.23 1.36.2-1 1 .24 1.36L10 6.98l-1.21.64.24-1.36-1-1 1.36-.2L10 3.22zM4.22 9.99l1.23-.61.2-1.36 1 1 1.36-.24-.64 1.21.64 1.21-1.36-.24-1 1-.2-1.36-1.23-.61zM10 16.78l-.61-1.23-1.36-.2 1-1-.24-1.36L10 13.02l1.21-.64-.24 1.36 1 1-1.36.2-.61 1.23zM15.78 9.99l-1.23.61-.2 1.36-1-1-1.36.24.64-1.21-.64-1.21 1.36.24 1-1 .2 1.36 1.23.61z"/>
+        </svg>
+        <svg id="icon-dark" class="h-6 w-6 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M17.293 13.293a8 8 0 11-10.586-10.586 8 8 0 0010.586 10.586z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Logo -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Recrud</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-300">Sign in to your account</p>
+    </div>
+
+    <!-- Login Form -->
+    <form class="space-y-6">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email address</label>
+        <input id="email" name="email" type="email" required
+          class="mt-1 block w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100"/>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
+        <input id="password" name="password" type="password" required
+          class="mt-1 block w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100"/>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input id="remember" name="remember" type="checkbox"
+            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"/>
+          <label for="remember" class="ml-2 block text-sm text-gray-600 dark:text-gray-300">
+            Remember me
+          </label>
+        </div>
+        <div class="text-sm">
+          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Forgot password?</a>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit"
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Sign In
+        </button>
+      </div>
+    </form>
+
+    <!-- Divider -->
+    <div class="flex items-center">
+      <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+      <span class="mx-4 text-gray-500 dark:text-gray-400">or</span>
+      <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+    </div>
+
+    <!-- Social Login Buttons -->
+    <div class="space-y-2">
+      <button
+        class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="h-5 w-5 mr-2"/>
+        Sign in with Google
+      </button>
+      <button
+        class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <img src="https://www.svgrepo.com/show/321449/github.svg" alt="GitHub" class="h-5 w-5 mr-2"/>
+        Sign in with GitHub
+      </button>
+      <button
+        class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <img src="https://www.svgrepo.com/show/353656/linkedin-icon.svg" alt="LinkedIn" class="h-5 w-5 mr-2"/>
+        Sign in with LinkedIn
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle logic
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    const iconLight = document.getElementById('icon-light');
+    const iconDark = document.getElementById('icon-dark');
+
+    function updateIcon() {
+      if (html.classList.contains('dark')) {
+        iconLight.classList.remove('hidden');
+        iconDark.classList.add('hidden');
+      } else {
+        iconLight.classList.add('hidden');
+        iconDark.classList.remove('hidden');
+      }
+    }
+
+    toggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      updateIcon();
+    });
+
+    // On load, set theme from localStorage or OS preference
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+      updateIcon();
+    })();
+  </script>
+</body>
+</html>
