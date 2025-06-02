@@ -5,6 +5,7 @@ import CandidateDashboard from './components/CandidateDashboard';
 import RecruiterDashboard from './components/RecruiterDashboard';
 import AssessmentPage from './components/AssessmentPage';
 import ReportsPage from './components/ReportsPage';
+import JobsPage from './components/JobsPage';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -17,6 +18,10 @@ function App() {
         <Route
           path="/candidate"
           element={token && role === 'candidate' ? <CandidateDashboard /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/candidate/jobs"
+          element={token && role === 'candidate' ? <JobsPage /> : <Navigate to="/" />}
         />
         <Route
           path="/recruiter/*"

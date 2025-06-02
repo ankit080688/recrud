@@ -21,12 +21,14 @@ def create_app():
     from .routes.submissions import submissions_bp
     from .routes.proctoring import proctoring_bp
     from .routes.reports import reports_bp
+    from .routes.jobs import jobs_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(assessments_bp)
     app.register_blueprint(submissions_bp)
     app.register_blueprint(proctoring_bp)
     app.register_blueprint(reports_bp)
+    app.register_blueprint(jobs_bp)
 
     return app
 
